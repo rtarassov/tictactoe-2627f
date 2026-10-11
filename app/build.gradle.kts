@@ -3,13 +3,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.tictactoe_2627f"
+    namespace = "ee.taltech.tictactoe"
     compileSdk {
         version = release(37)
     }
 
     defaultConfig {
-        applicationId = "com.example.tictactoe_2627f"
+        applicationId = "ee.taltech.tictactoe"
         minSdk = 26
         targetSdk = 37
         versionCode = 1

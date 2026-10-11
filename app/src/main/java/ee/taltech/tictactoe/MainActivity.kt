@@ -1,4 +1,4 @@
-package com.example.tictactoe_2627f
+package ee.taltech.tictactoe
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
