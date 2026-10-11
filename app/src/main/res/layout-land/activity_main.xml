@@ -35,7 +35,4 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5" />
 
-    <!--    <include layout="@layout/game_board"/>-->
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
