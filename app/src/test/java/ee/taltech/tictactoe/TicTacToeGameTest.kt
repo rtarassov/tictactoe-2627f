@@ -2,9 +2,11 @@ package ee.taltech.tictactoe
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import kotlin.random.Random
 
 class TicTacToeGameTest {
 
@@ -182,5 +184,46 @@ class TicTacToeGameTest {
     @Test(expected = IllegalArgumentException::class)
     fun fromBoardString_rejectsUnknownSymbol() {
         TicTacToeGame.fromBoardString("X...Z....", Player.X)
+    }
+    @Test
+    fun makeRandomMove_choosesOnlyEmptyCells() {
+        val game = TicTacToeGame(random = Random(42))
+        game.makeMove(0, 0)
+        game.makeMove(0, 1)
+        game.makeMove(0, 2)
+        val emptyCellsBefore = game.emptyCells()
+
+        val chosenCell = game.makeRandomMove()
+
+        assertNotNull(chosenCell)
+        assertTrue(chosenCell in emptyCellsBefore)
+        assertEquals(Player.O, game.board[chosenCell!!.row][chosenCell.column])
+        assertEquals(4, game.moveCount)
+        assertEquals(Player.X, game.currentPlayer)
+    }
+
+    @Test
+    fun makeRandomMove_whenGameOver_returnsNull() {
+        val game = TicTacToeGame(random = Random(7))
+        game.makeMove(0, 0)
+        game.makeMove(1, 0)
+        game.makeMove(0, 1)
+        game.makeMove(1, 1)
+        game.makeMove(0, 2)
+
+        assertNull(game.makeRandomMove())
+        assertEquals(5, game.moveCount)
+    }
+
+    @Test
+    fun makeRandomMove_repeated_alwaysFinishesTheGame() {
+        val game = TicTacToeGame(random = Random(3))
+
+        while (game.status == GameStatus.IN_PROGRESS) {
+            assertNotNull(game.makeRandomMove())
+        }
+
+        assertTrue(game.status == GameStatus.WON || game.status == GameStatus.DRAW)
+        assertTrue(game.moveCount <= 9)
     }
 }

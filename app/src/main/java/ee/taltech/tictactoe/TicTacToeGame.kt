@@ -1,5 +1,7 @@
 package ee.taltech.tictactoe
 
+import kotlin.random.Random
+
 enum class Player {
     X, O;
 
@@ -10,7 +12,10 @@ enum class GameStatus { IN_PROGRESS, WON, DRAW }
 
 data class Cell(val row: Int, val column: Int)
 
-class TicTacToeGame(startingPlayer: Player = Player.X) {
+class TicTacToeGame(
+    startingPlayer: Player = Player.X,
+    private val random: Random = Random.Default,
+) {
 
     private val cells: Array<Array<Player?>> = Array(BOARD_SIZE) { arrayOfNulls<Player>(BOARD_SIZE) }
 
@@ -44,6 +49,15 @@ class TicTacToeGame(startingPlayer: Player = Player.X) {
             currentPlayer = currentPlayer.opponent()
         }
         return true
+    }
+
+    fun makeRandomMove(): Cell? {
+        if (status != GameStatus.IN_PROGRESS) return null
+        val emptyCells = emptyCells()
+        if (emptyCells.isEmpty()) return null
+        val chosenCell = emptyCells.random(random)
+        makeMove(chosenCell.row, chosenCell.column)
+        return chosenCell
     }
 
     fun emptyCells(): List<Cell> {
