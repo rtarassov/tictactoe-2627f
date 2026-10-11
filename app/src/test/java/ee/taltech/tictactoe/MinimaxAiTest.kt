@@ -3,6 +3,7 @@ package ee.taltech.tictactoe
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import kotlin.random.Random
 
@@ -75,5 +76,53 @@ class MinimaxAiTest {
         val chosenCell = MinimaxAi.forBoard(game, Random(1)).chooseMove(game)
 
         assertEquals(Cell(3, 6), chosenCell)
+    }
+    @Test
+    fun chooseMove_onLargeBoard_playsNextToExistingPieces() {
+        val game = TicTacToeGame.fromMoves(7, 7, 4, Player.X, listOf(Cell(3, 3)))
+
+        val chosenCell = MinimaxAi.forBoard(game, Random(1)).chooseMove(game)!!
+
+        assertTrue("chosen $chosenCell", kotlin.math.abs(chosenCell.row - 3) <= 1 && kotlin.math.abs(chosenCell.column - 3) <= 1)
+    }
+
+    @Test
+    fun chooseMove_onEmptyLargeBoard_startsInTheCentre() {
+        val game = TicTacToeGame(7, 7, 4)
+
+        assertEquals(Cell(3, 3), MinimaxAi.forBoard(game, Random(1)).chooseMove(game))
+    }
+
+    @Test
+    fun chooseMove_onLargeBoard_blocksAnOpenThree() {
+        val game = TicTacToeGame.fromMoves(
+            7, 7, 5, Player.X,
+            listOf(Cell(3, 2), Cell(0, 0), Cell(3, 3), Cell(0, 1), Cell(3, 4)),
+        )
+
+        val chosenCell = MinimaxAi.forBoard(game, Random(1)).chooseMove(game)
+
+        assertTrue("chosen $chosenCell", chosenCell == Cell(3, 1) || chosenCell == Cell(3, 5))
+    }
+
+    @Test
+    fun minimaxPlayer_beatsRandomOnLargeBoardWhenHumanStarts() {
+        val random = Random(11)
+        var aiWins = 0
+        repeat(10) {
+            val game = TicTacToeGame(7, 7, 4, startingPlayer = Player.X, random = random)
+            val ai = MinimaxAi.forBoard(game, random)
+            while (game.status == GameStatus.IN_PROGRESS) {
+                if (game.currentPlayer == Player.O) {
+                    val cell = ai.chooseMove(game)!!
+                    game.makeMove(cell.row, cell.column)
+                } else {
+                    game.makeRandomMove()
+                }
+            }
+            assertNotEquals(game.toBoardString(), Player.X, game.winner)
+            if (game.winner == Player.O) aiWins++
+        }
+        assertTrue("AI won only $aiWins of 10", aiWins >= 8)
     }
 }

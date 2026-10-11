@@ -53,9 +53,13 @@ class TicTacToeGame(
     var winningCells: List<Cell> = emptyList()
         private set
 
+    fun playerAt(row: Int, column: Int): Player? = cells[row][column]
+
+    fun isInsideBoard(row: Int, column: Int): Boolean = row in 0 until rowCount && column in 0 until columnCount
+
     fun makeMove(row: Int, column: Int): Boolean {
         if (status != GameStatus.IN_PROGRESS) return false
-        if (row !in 0 until rowCount || column !in 0 until columnCount) return false
+        if (!isInsideBoard(row, column)) return false
         if (cells[row][column] != null) return false
 
         cells[row][column] = currentPlayer
@@ -138,7 +142,7 @@ class TicTacToeGame(
         val collected = mutableListOf<Cell>()
         var row = start.row + rowStep
         var column = start.column + columnStep
-        while (row in 0 until rowCount && column in 0 until columnCount && cells[row][column] == player) {
+        while (isInsideBoard(row, column) && cells[row][column] == player) {
             collected.add(Cell(row, column))
             row += rowStep
             column += columnStep

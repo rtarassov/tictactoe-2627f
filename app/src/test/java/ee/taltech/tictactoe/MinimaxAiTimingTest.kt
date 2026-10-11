@@ -24,10 +24,14 @@ class MinimaxAiTimingTest {
             measureChooseMoveMs(4, 4, 3, 0),
             measureChooseMoveMs(5, 5, 4, 0),
             measureChooseMoveMs(7, 7, 4, 0),
+            measureChooseMoveMs(6, 6, 4, 12),
             measureChooseMoveMs(7, 7, 4, 10),
+            measureChooseMoveMs(7, 7, 4, 25),
+            measureChooseMoveMs(8, 8, 5, 30),
             measureChooseMoveMs(10, 10, 5, 0),
             measureChooseMoveMs(10, 10, 5, 20),
+            measureChooseMoveMs(10, 10, 5, 50),
         )
-        assertTrue("timings: $timings", timings.all { elapsedMs -> elapsedMs < 1500 })
+        assertTrue("timings: $timings", timings.all { elapsedMs -> elapsedMs < 600 })
     }
 }
