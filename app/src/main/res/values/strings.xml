@@ -26,6 +26,7 @@
     <string name="stats_human_wins_vs_ai">Human wins vs AI</string>
     <string name="stats_ai_wins_vs_human">AI wins vs human</string>
     <string name="stats_average_duration">Average game time</string>
+    <string name="stats_count_format">%d</string>
     <string name="stats_duration_format">%1$d:%2$02d</string>
     <string name="reset_statistics">Reset statistics</string>
 

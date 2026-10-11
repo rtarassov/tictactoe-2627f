@@ -7,18 +7,18 @@ import android.view.View
 import android.widget.Button
 import android.widget.Chronometer
 import android.widget.RadioGroup
-import android.widget.Switch
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var switchVsAi: Switch
+    private lateinit var switchVsAi: SwitchCompat
     private lateinit var radioGroupStarter: RadioGroup
     private lateinit var textViewStatus: TextView
     private lateinit var chronometerGameTime: Chronometer

@@ -51,16 +51,18 @@ class StatsActivity : AppCompatActivity() {
 
     private fun renderStatistics() {
         val statistics = statisticsStorage.load()
-        textViewGamesPlayed.text = statistics.gamesPlayed.toString()
-        textViewWinsX.text = statistics.winsX.toString()
-        textViewWinsO.text = statistics.winsO.toString()
-        textViewDraws.text = statistics.draws.toString()
-        textViewHumanWinsVsAi.text = statistics.humanWinsVsAi.toString()
-        textViewAiWinsVsHuman.text = statistics.aiWinsVsHuman.toString()
+        textViewGamesPlayed.text = countText(statistics.gamesPlayed)
+        textViewWinsX.text = countText(statistics.winsX)
+        textViewWinsO.text = countText(statistics.winsO)
+        textViewDraws.text = countText(statistics.draws)
+        textViewHumanWinsVsAi.text = countText(statistics.humanWinsVsAi)
+        textViewAiWinsVsHuman.text = countText(statistics.aiWinsVsHuman)
 
         val averageSeconds = statistics.averageDurationMs / 1000
         val minutes = averageSeconds / 60
         val seconds = averageSeconds % 60
         textViewAverageDuration.text = getString(R.string.stats_duration_format, minutes, seconds)
     }
+
+    private fun countText(count: Int): String = getString(R.string.stats_count_format, count)
 }
