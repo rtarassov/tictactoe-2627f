@@ -5,121 +5,26 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayoutBoard"
+        android:id="@+id/constraintLayoutBoardArea"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="@dimen/board_margin"
-        android:background="@color/board_lines"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/buttonCell00"
-            style="@style/GameButton"
-            android:onClick="buttonCellClicked"
-            app:layout_constraintBottom_toTopOf="@+id/buttonCell10"
-            app:layout_constraintDimensionRatio="H,1:1"
-            app:layout_constraintEnd_toStartOf="@+id/buttonCell01"
-            app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="spread_inside"
-            app:layout_constraintWidth_percent="0.32" />
-
-        <Button
-            android:id="@+id/buttonCell01"
-            style="@style/GameButton"
-            android:onClick="buttonCellClicked"
-            app:layout_constraintBottom_toTopOf="@+id/buttonCell11"
-            app:layout_constraintDimensionRatio="H,1:1"
-            app:layout_constraintEnd_toStartOf="@+id/buttonCell02"
-            app:layout_constraintStart_toEndOf="@+id/buttonCell00"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="spread_inside"
-            app:layout_constraintWidth_percent="0.32" />
-
-        <Button
-            android:id="@+id/buttonCell02"
-            style="@style/GameButton"
-            android:onClick="buttonCellClicked"
-            app:layout_constraintBottom_toTopOf="@+id/buttonCell12"
-            app:layout_constraintDimensionRatio="H,1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/buttonCell01"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="spread_inside"
-            app:layout_constraintWidth_percent="0.32" />
-
-        <Button
-            android:id="@+id/buttonCell10"
-            style="@style/GameButton"
-            android:onClick="buttonCellClicked"
-            app:layout_constraintBottom_toTopOf="@+id/buttonCell20"
-            app:layout_constraintDimensionRatio="H,1:1"
-            app:layout_constraintEnd_toStartOf="@+id/buttonCell11"
-            app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonCell00"
-            app:layout_constraintWidth_percent="0.32" />
-
-        <Button
-            android:id="@+id/buttonCell11"
-            style="@style/GameButton"
-            android:onClick="buttonCellClicked"
-            app:layout_constraintBottom_toTopOf="@+id/buttonCell21"
-            app:layout_constraintDimensionRatio="H,1:1"
-            app:layout_constraintEnd_toStartOf="@+id/buttonCell12"
-            app:layout_constraintStart_toEndOf="@+id/buttonCell10"
-            app:layout_constraintTop_toBottomOf="@+id/buttonCell01"
-            app:layout_constraintWidth_percent="0.32" />
-
-        <Button
-            android:id="@+id/buttonCell12"
-            style="@style/GameButton"
-            android:onClick="buttonCellClicked"
-            app:layout_constraintBottom_toTopOf="@+id/buttonCell22"
-            app:layout_constraintDimensionRatio="H,1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/buttonCell11"
-            app:layout_constraintTop_toBottomOf="@+id/buttonCell02"
-            app:layout_constraintWidth_percent="0.32" />
-
-        <Button
-            android:id="@+id/buttonCell20"
-            style="@style/GameButton"
-            android:onClick="buttonCellClicked"
+        <GridLayout
+            android:id="@+id/gridLayoutBoard"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/board_lines"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="H,1:1"
-            app:layout_constraintEnd_toStartOf="@+id/buttonCell21"
-            app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonCell10"
-            app:layout_constraintWidth_percent="0.32" />
-
-        <Button
-            android:id="@+id/buttonCell21"
-            style="@style/GameButton"
-            android:onClick="buttonCellClicked"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="H,1:1"
-            app:layout_constraintEnd_toStartOf="@+id/buttonCell22"
-            app:layout_constraintStart_toEndOf="@+id/buttonCell20"
-            app:layout_constraintTop_toBottomOf="@+id/buttonCell11"
-            app:layout_constraintWidth_percent="0.32" />
-
-        <Button
-            android:id="@+id/buttonCell22"
-            style="@style/GameButton"
-            android:onClick="buttonCellClicked"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="H,1:1"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/buttonCell21"
-            app:layout_constraintTop_toBottomOf="@+id/buttonCell12"
-            app:layout_constraintWidth_percent="0.32" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
