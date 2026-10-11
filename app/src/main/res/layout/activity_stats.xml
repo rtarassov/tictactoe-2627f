@@ -182,14 +182,26 @@
         app:layout_constraintStart_toStartOf="@+id/guidelineValues" />
 
     <Button
-        android:id="@+id/buttonResetStatistics"
+        android:id="@+id/buttonBackToGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/board_margin"
-        android:onClick="buttonResetStatisticsClicked"
-        android:text="@string/reset_statistics"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:onClick="buttonBackToGameClicked"
+        android:text="@string/back_to_game"
+        app:layout_constraintEnd_toStartOf="@+id/buttonResetStatistics"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewLabelAverageDuration" />
+
+    <Button
+        android:id="@+id/buttonResetStatistics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/info_spacing"
+        android:onClick="buttonResetStatisticsClicked"
+        android:text="@string/reset_statistics"
+        app:layout_constraintBaseline_toBaselineOf="@+id/buttonBackToGame"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonBackToGame" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

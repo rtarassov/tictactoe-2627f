@@ -5,6 +5,7 @@ import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers.isDialog
+import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -158,5 +159,28 @@ class GameScreenTest {
         onView(withId(R.id.textViewGamesPlayed)).check(matches(withText("0")))
         onView(withId(R.id.textViewWinsX)).check(matches(withText("0")))
         pressBack()
+    }
+    @Test
+    fun backToGameButton_returnsToGameScreen() {
+        onView(withId(R.id.buttonStatistics)).perform(click())
+
+        onView(withId(R.id.buttonBackToGame)).perform(click())
+
+        onView(withId(R.id.textViewStatus)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun vsAiMode_aiAnswersAfterShortDelay() {
+        onView(withId(R.id.switchVsAi)).perform(click())
+        onView(withId(R.id.switchVsAi)).check(matches(isChecked()))
+        onView(withId(R.id.buttonNewGame)).perform(click())
+
+        onView(withId(R.id.buttonCell11)).perform(click())
+        onView(withId(R.id.textViewStatus)).check(matches(withText(text(R.string.status_turn, "O"))))
+
+        Thread.sleep(MainActivity.AI_MOVE_DELAY_MS + 300)
+
+        onView(withId(R.id.textViewStatus)).check(matches(withText(text(R.string.status_turn, "X"))))
+        onView(withId(R.id.buttonCell11)).check(matches(withText("X")))
     }
 }

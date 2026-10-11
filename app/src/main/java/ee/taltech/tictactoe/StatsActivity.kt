@@ -44,6 +44,10 @@ class StatsActivity : AppCompatActivity() {
         renderStatistics()
     }
 
+    fun buttonBackToGameClicked(view: View) {
+        finish()
+    }
+
     fun buttonResetStatisticsClicked(view: View) {
         statisticsStorage.reset()
         renderStatistics()

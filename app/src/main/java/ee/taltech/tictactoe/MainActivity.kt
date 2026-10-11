@@ -2,6 +2,8 @@ package ee.taltech.tictactoe
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
 import android.view.View
 import android.widget.Button
@@ -31,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     private var finishedGameDurationMs = 0L
     private var isNewGameDialogShowing = false
     private var newGameDialog: AlertDialog? = null
+    private val aiMoveHandler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,19 +82,22 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         newGameDialog?.dismiss()
+        aiMoveHandler.removeCallbacksAndMessages(null)
     }
 
     fun buttonCellClicked(view: View) {
+        if (isAiTurn()) return
+
         val cellIndex = cellButtons.indexOf(view)
         val row = cellIndex / TicTacToeGame.BOARD_SIZE
         val column = cellIndex % TicTacToeGame.BOARD_SIZE
         val moveWasMade = game.makeMove(row, column)
         if (!moveWasMade) return
 
-        if (isVsAi && game.status == GameStatus.IN_PROGRESS) {
-            game.makeRandomMove()
-        }
         onMoveMade()
+        if (isAiTurn()) {
+            scheduleAiMove()
+        }
     }
 
     fun buttonNewGameClicked(view: View) {
@@ -107,18 +113,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startNewGame() {
+        aiMoveHandler.removeCallbacksAndMessages(null)
         isVsAi = switchVsAi.isChecked
         val startingPlayer = if (radioGroupStarter.checkedRadioButtonId == R.id.radioButtonStarterO) Player.O else Player.X
         game = TicTacToeGame(startingPlayer)
         gameStartElapsedRealtime = 0L
         finishedGameDurationMs = 0L
+        renderGame()
 
-        if (isVsAi && startingPlayer == Player.O) {
-            game.makeRandomMove()
-            onMoveMade()
-        } else {
-            renderGame()
+        if (isAiTurn()) {
+            scheduleAiMove()
         }
+    }
+
+    private fun isAiTurn(): Boolean =
+        isVsAi && game.status == GameStatus.IN_PROGRESS && game.currentPlayer == Player.O
+
+    private fun scheduleAiMove() {
+        aiMoveHandler.postDelayed({ makeAiMove() }, AI_MOVE_DELAY_MS)
+    }
+
+    private fun makeAiMove() {
+        game.makeRandomMove()
+        onMoveMade()
     }
 
     private fun onMoveMade() {
@@ -141,6 +158,9 @@ class MainActivity : AppCompatActivity() {
         finishedGameDurationMs = savedInstanceState.getLong(KEY_FINISHED_DURATION)
         renderGame()
 
+        if (isAiTurn()) {
+            scheduleAiMove()
+        }
         if (savedInstanceState.getBoolean(KEY_DIALOG_SHOWING)) {
             showNewGameDialog()
         }
@@ -195,6 +215,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
+        const val AI_MOVE_DELAY_MS = 400L
         private const val EMPTY_BOARD = "........."
         private const val KEY_BOARD = "board"
         private const val KEY_CURRENT_PLAYER = "currentPlayer"

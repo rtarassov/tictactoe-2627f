@@ -29,6 +29,7 @@
     <string name="stats_count_format">%d</string>
     <string name="stats_duration_format">%1$d:%2$02d</string>
     <string name="reset_statistics">Reset statistics</string>
+    <string name="back_to_game">Back to game</string>
 
     <string name="preference_file_statistics" translatable="false">tictactoe_statistics</string>
     <string name="stat_key_games_played" translatable="false">games_played</string>
