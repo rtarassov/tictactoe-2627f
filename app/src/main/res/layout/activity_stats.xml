@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/board_margin"
+    tools:context=".StatsActivity">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineValues"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.65" />
+
+    <TextView
+        android:id="@+id/textViewStatsTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/stats_title"
+        android:textAppearance="?attr/textAppearanceHeadlineMedium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewLabelGamesPlayed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/board_margin"
+        android:text="@string/stats_games_played"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineValues"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewStatsTitle" />
+
+    <TextView
+        android:id="@+id/textViewGamesPlayed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textViewLabelGamesPlayed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guidelineValues" />
+
+    <TextView
+        android:id="@+id/textViewLabelWinsX"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/info_spacing"
+        android:text="@string/stats_wins_x"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineValues"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabelGamesPlayed" />
+
+    <TextView
+        android:id="@+id/textViewWinsX"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textViewLabelWinsX"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guidelineValues" />
+
+    <TextView
+        android:id="@+id/textViewLabelWinsO"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/info_spacing"
+        android:text="@string/stats_wins_o"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineValues"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabelWinsX" />
+
+    <TextView
+        android:id="@+id/textViewWinsO"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textViewLabelWinsO"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guidelineValues" />
+
+    <TextView
+        android:id="@+id/textViewLabelDraws"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/info_spacing"
+        android:text="@string/stats_draws"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineValues"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabelWinsO" />
+
+    <TextView
+        android:id="@+id/textViewDraws"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textViewLabelDraws"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guidelineValues" />
+
+    <TextView
+        android:id="@+id/textViewLabelHumanWinsVsAi"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/info_spacing"
+        android:text="@string/stats_human_wins_vs_ai"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineValues"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabelDraws" />
+
+    <TextView
+        android:id="@+id/textViewHumanWinsVsAi"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textViewLabelHumanWinsVsAi"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guidelineValues" />
+
+    <TextView
+        android:id="@+id/textViewLabelAiWinsVsHuman"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/info_spacing"
+        android:text="@string/stats_ai_wins_vs_human"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineValues"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabelHumanWinsVsAi" />
+
+    <TextView
+        android:id="@+id/textViewAiWinsVsHuman"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textViewLabelAiWinsVsHuman"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guidelineValues" />
+
+    <TextView
+        android:id="@+id/textViewLabelAverageDuration"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/info_spacing"
+        android:text="@string/stats_average_duration"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineValues"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabelAiWinsVsHuman" />
+
+    <TextView
+        android:id="@+id/textViewAverageDuration"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textViewLabelAverageDuration"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guidelineValues" />
+
+    <Button
+        android:id="@+id/buttonResetStatistics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/board_margin"
+        android:onClick="buttonResetStatisticsClicked"
+        android:text="@string/reset_statistics"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabelAverageDuration" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

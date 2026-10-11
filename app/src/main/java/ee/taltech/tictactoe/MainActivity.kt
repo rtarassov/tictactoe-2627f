@@ -1,5 +1,6 @@
 package ee.taltech.tictactoe
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var textViewStatus: TextView
     private lateinit var chronometerGameTime: Chronometer
     private lateinit var cellButtons: List<Button>
+    private lateinit var statisticsStorage: StatisticsStorage
 
     private var game = TicTacToeGame()
     private var isVsAi = false
@@ -44,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         radioGroupStarter = findViewById(R.id.radioGroupStarter)
         textViewStatus = findViewById(R.id.textViewStatus)
         chronometerGameTime = findViewById(R.id.chronometerGameTime)
+        statisticsStorage = StatisticsStorage(this)
         cellButtons = listOf(
             findViewById(R.id.buttonCell00),
             findViewById(R.id.buttonCell01),
@@ -100,6 +103,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun buttonStatisticsClicked(view: View) {
+        startActivity(Intent(this, StatsActivity::class.java))
     }
 
     private fun startNewGame() {
@@ -123,6 +127,7 @@ class MainActivity : AppCompatActivity() {
         }
         if (game.status != GameStatus.IN_PROGRESS) {
             finishedGameDurationMs = SystemClock.elapsedRealtime() - gameStartElapsedRealtime
+            statisticsStorage.recordGame(game.winner, isVsAi, finishedGameDurationMs)
         }
         renderGame()
     }
