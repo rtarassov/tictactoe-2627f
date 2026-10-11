@@ -3,6 +3,7 @@ package ee.taltech.tictactoe
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -53,5 +54,68 @@ class GameScreenTest {
 
         onView(withId(R.id.buttonCell11)).check(matches(withText("X")))
         onView(withId(R.id.textViewStatus)).check(matches(withText(text(R.string.status_turn, "O"))))
+    }
+    @Test
+    fun newGameMidGame_showsConfirmationDialog_andCancelKeepsBoard() {
+        onView(withId(R.id.buttonCell00)).perform(click())
+        onView(withId(R.id.buttonCell11)).perform(click())
+
+        onView(withId(R.id.buttonNewGame)).perform(click())
+        onView(withText(R.string.new_game_dialog_title)).check(matches(isDisplayed()))
+        onView(withText(R.string.new_game_dialog_cancel)).perform(click())
+
+        onView(withId(R.id.buttonCell00)).check(matches(withText("X")))
+        onView(withId(R.id.buttonCell11)).check(matches(withText("O")))
+        onView(withId(R.id.textViewStatus)).check(matches(withText(text(R.string.status_turn, "X"))))
+    }
+
+    @Test
+    fun newGameMidGame_confirmClearsBoard() {
+        onView(withId(R.id.buttonCell00)).perform(click())
+
+        onView(withId(R.id.buttonNewGame)).perform(click())
+        onView(withText(R.string.new_game_dialog_confirm)).perform(click())
+
+        onView(withId(R.id.buttonCell00)).check(matches(withText("")))
+        onView(withId(R.id.textViewStatus)).check(matches(withText(text(R.string.status_turn, "X"))))
+    }
+
+    @Test
+    fun newGameAfterWin_clearsBoardWithoutDialog() {
+        playXWinsTopRow()
+
+        onView(withId(R.id.buttonNewGame)).perform(click())
+
+        onView(withId(R.id.buttonCell00)).check(matches(withText("")))
+        onView(withId(R.id.textViewStatus)).check(matches(withText(text(R.string.status_turn, "X"))))
+    }
+
+    @Test
+    fun recreate_keepsBoardTurnAndResult() {
+        onView(withId(R.id.buttonCell00)).perform(click())
+        onView(withId(R.id.buttonCell11)).perform(click())
+
+        activityRule.scenario.recreate()
+
+        onView(withId(R.id.buttonCell00)).check(matches(withText("X")))
+        onView(withId(R.id.buttonCell11)).check(matches(withText("O")))
+        onView(withId(R.id.textViewStatus)).check(matches(withText(text(R.string.status_turn, "X"))))
+
+        onView(withId(R.id.buttonCell01)).perform(click())
+        onView(withId(R.id.buttonCell20)).perform(click())
+        onView(withId(R.id.buttonCell02)).perform(click())
+        activityRule.scenario.recreate()
+
+        onView(withId(R.id.textViewStatus)).check(matches(withText(text(R.string.status_winner, "X"))))
+    }
+
+    @Test
+    fun recreate_keepsConfirmationDialogOpen() {
+        onView(withId(R.id.buttonCell00)).perform(click())
+        onView(withId(R.id.buttonNewGame)).perform(click())
+
+        activityRule.scenario.recreate()
+
+        onView(withText(R.string.new_game_dialog_title)).check(matches(isDisplayed()))
     }
 }
