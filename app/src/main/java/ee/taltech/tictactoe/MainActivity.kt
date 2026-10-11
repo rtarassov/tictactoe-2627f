@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity() {
 
     fun buttonRotateBoardClicked(view: View) {
         boardRotationDegrees += QUARTER_TURN_DEGREES
-        gridLayoutBoard.animate().rotationBy(QUARTER_TURN_DEGREES)
+        gridLayoutBoard.animate().rotation(boardRotationDegrees)
     }
 
     fun buttonBoardSettingsClicked(view: View) {

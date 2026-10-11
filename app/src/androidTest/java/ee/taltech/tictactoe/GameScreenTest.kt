@@ -237,4 +237,14 @@ class GameScreenTest {
         onView(withText(R.string.board_settings_rows)).inRoot(isDialog()).check(matches(isDisplayed()))
         onView(withText(R.string.board_settings_cancel)).inRoot(isDialog()).perform(click())
     }
+    @Test
+    fun rotateBoardButton_tappedTwiceQuickly_endsAtExactly180Degrees() {
+        onView(withId(R.id.buttonRotateBoard)).perform(click())
+        onView(withId(R.id.buttonRotateBoard)).perform(click())
+        Thread.sleep(ROTATION_ANIMATION_WAIT_MS)
+
+        activityRule.scenario.onActivity { activity ->
+            assertEquals(180f, activity.findViewById<android.view.View>(R.id.gridLayoutBoard).rotation)
+        }
+    }
 }
