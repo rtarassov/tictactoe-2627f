@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="board_lines">#FFBDBDBD</color>
+    <color name="cell_background">#FF1E1E1E</color>
+    <color name="cell_winning">#FF2E7D32</color>
+    <color name="cell_text">#FFF5F5F5</color>
+</resources>
