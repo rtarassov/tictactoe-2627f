@@ -28,7 +28,7 @@ Lihtsas keeles kirjas, mida see projekt teeb, miks ta nii on ehitatud ja mida õ
 | `res/layout/game_info.xml` | Lüliti "Play against AI", raadionupud "X/O starts", seisu tekst, Chronometer, nupud. |
 | `res/layout/game_board.xml` | Ruudukujuline laud. Põhiharus 9 nuppu chain'idega; boonusharus tühi `GridLayout`, mille kood täidab. |
 | `res/layout/cell_button.xml` (boonus) | Ühe lahtri mall, millest kood teeb koopiad. |
-| `res/layout/dialog_board_settings.xml` (boonus) | Laua seadete dialoogi sisu (NumberPicker × 3 + AI tase). |
+| `res/layout/dialog_board_settings.xml` (boonus) | Laua seadete dialoogi sisu (NumberPicker × 3: read, veerud, võidurida). |
 | `res/layout/activity_stats.xml` | Statistika ekraani paigutus. |
 | `res/values/strings.xml` | Kõik tekstid + SharedPreferences võtmed. Koodis ega layoutis pole ühtegi kõva teksti. |
 | `res/values/colors.xml` + `res/values-night/colors.xml` | Laua värvid heledas ja pimedas teemas. |
@@ -127,7 +127,7 @@ Väljast saab lugeda (`game.status`), aga muuta saab ainult klass ise. Activity 
 Klassi-tasemel asjad, mida ei pea objekti kaudu kutsuma: konstandid (`BOARD_SIZE`), abifunktsioonid (`fromMoves`). `const val` on kompileerimisaegne konstant.
 
 **Kuidas juhuslik AI töötab?**
-`emptyCells().random(random)` — tühjade lahtrite list ja sellest juhuslik. `Random` antakse konstruktoris ette, et testides saaks seemnega (`Random(42)`) sama tulemuse korrata.
+`emptyCells().random(random)` — tühjade lahtrite list ja sellest juhuslik. `Random` antakse konstruktoris ette, et testides saaks seemnega (`Random(42)`) sama tulemuse korrata. **Boonusharus** mängib AI alati minimaxiga; `makeRandomMove()` jäi mootorisse ainult testide jaoks (minimaxi vastane testides).
 
 ### AI viivitus
 
@@ -231,7 +231,7 @@ Espresso ei pea dialoogi akent "juureks" enne, kui see on fookuse saanud. Kohe p
 - **Alpha-beta**: alpha = parim, mille mina kindlalt saan; beta = parim, mille vastane kindlalt saab. Kui need ristuvad (`beta <= alpha`), ei ole mõtet haru lõpuni vaadata → `break`. Tulemus sama, aga palju vähem tööd.
 - 3×3 vaadatakse mäng lõpuni (võitmatu). Suurel laual sügavust piiratakse (16 lahtrit: 6; 36: 4; 64: 3; muidu 2) ja lõpus hinnatakse seisu **hindamisfunktsiooniga**: loen kõik võimalikud võiduaknad (`winLength` järjestikust lahtrit), kus on ainult ühe poole sümbolid; 1/2/3/4 sümbolit = 1/10/100/1000 punkti, enda omad pluss, vastase omad miinus. Nii ehitab AI ridu ja blokeerib varakult.
 - Suurel laual vaadatakse ainult lahtreid, mis puutuvad kokku mõne olemasoleva nupuga (tühjal laual keskpunkt) — kaugel servas käigud ei ole kunagi kasulikud ja hargnemine jääb väikeseks. Mõõdetud: halvim juhtum ~30 ms arvutis.
-- Nimi dialoogis on "Minimax", mitte "unbeatable", sest suurel laual on otsing piiratud sügavusega.
+- AI mängib boonusharus **alati** minimaxiga — valikut "juhuslik / minimax" ei ole. 3×3 laual on ta võitmatu, suurel laual tugev, aga piiratud sügavusega.
 
 ---
 
