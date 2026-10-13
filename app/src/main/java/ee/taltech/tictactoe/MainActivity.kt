@@ -35,7 +35,6 @@ class MainActivity : AppCompatActivity() {
 
     private var game = TicTacToeGame()
     private var isVsAi = false
-    private var isMinimaxAi = false
     private var nextRowCount = TicTacToeGame.DEFAULT_BOARD_SIZE
     private var nextColumnCount = TicTacToeGame.DEFAULT_BOARD_SIZE
     private var nextWinLength = TicTacToeGame.DEFAULT_BOARD_SIZE
@@ -80,7 +79,6 @@ class MainActivity : AppCompatActivity() {
         outState.putString(KEY_STARTING_PLAYER, game.startingPlayer.name)
         outState.putIntArray(KEY_MOVES, game.moveHistory.map { cell -> cellIndexOf(cell) }.toIntArray())
         outState.putBoolean(KEY_IS_VS_AI, isVsAi)
-        outState.putBoolean(KEY_IS_MINIMAX_AI, isMinimaxAi)
         outState.putInt(KEY_NEXT_ROW_COUNT, nextRowCount)
         outState.putInt(KEY_NEXT_COLUMN_COUNT, nextColumnCount)
         outState.putInt(KEY_NEXT_WIN_LENGTH, nextWinLength)
@@ -171,13 +169,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun makeAiMove() {
-        if (isMinimaxAi) {
-            val bestCell = MinimaxAi.forBoard(game).chooseMove(game)
-            if (bestCell != null) {
-                game.makeMove(bestCell.row, bestCell.column)
-            }
-        } else {
-            game.makeRandomMove()
+        val bestCell = MinimaxAi.forBoard(game).chooseMove(game)
+        if (bestCell != null) {
+            game.makeMove(bestCell.row, bestCell.column)
         }
         onMoveMade()
     }
@@ -198,7 +192,6 @@ class MainActivity : AppCompatActivity() {
         nextColumnCount = savedInstanceState.getInt(KEY_NEXT_COLUMN_COUNT, TicTacToeGame.DEFAULT_BOARD_SIZE)
         nextWinLength = savedInstanceState.getInt(KEY_NEXT_WIN_LENGTH, TicTacToeGame.DEFAULT_BOARD_SIZE)
         isVsAi = savedInstanceState.getBoolean(KEY_IS_VS_AI)
-        isMinimaxAi = savedInstanceState.getBoolean(KEY_IS_MINIMAX_AI)
         boardRotationDegrees = savedInstanceState.getFloat(KEY_BOARD_ROTATION)
         gameStartElapsedRealtime = savedInstanceState.getLong(KEY_GAME_START)
         finishedGameDurationMs = savedInstanceState.getLong(KEY_FINISHED_DURATION)
@@ -271,12 +264,10 @@ class MainActivity : AppCompatActivity() {
         val numberPickerRows = dialogView.findViewById<NumberPicker>(R.id.numberPickerRows)
         val numberPickerColumns = dialogView.findViewById<NumberPicker>(R.id.numberPickerColumns)
         val numberPickerWinLength = dialogView.findViewById<NumberPicker>(R.id.numberPickerWinLength)
-        val radioGroupAiLevel = dialogView.findViewById<RadioGroup>(R.id.radioGroupAiLevel)
 
         setupNumberPicker(numberPickerRows, TicTacToeGame.MIN_BOARD_SIZE, TicTacToeGame.MAX_BOARD_SIZE, nextRowCount)
         setupNumberPicker(numberPickerColumns, TicTacToeGame.MIN_BOARD_SIZE, TicTacToeGame.MAX_BOARD_SIZE, nextColumnCount)
         setupNumberPicker(numberPickerWinLength, TicTacToeGame.MIN_WIN_LENGTH, TicTacToeGame.MAX_BOARD_SIZE, nextWinLength)
-        radioGroupAiLevel.check(if (isMinimaxAi) R.id.radioButtonAiMinimax else R.id.radioButtonAiRandom)
 
         boardSettingsDialog = AlertDialog.Builder(this)
             .setTitle(R.string.board_settings)
@@ -285,7 +276,6 @@ class MainActivity : AppCompatActivity() {
                 nextRowCount = numberPickerRows.value
                 nextColumnCount = numberPickerColumns.value
                 nextWinLength = numberPickerWinLength.value.coerceAtMost(maxOf(nextRowCount, nextColumnCount))
-                isMinimaxAi = radioGroupAiLevel.checkedRadioButtonId == R.id.radioButtonAiMinimax
                 if (game.moveCount == 0) {
                     startNewGame()
                 }
@@ -351,7 +341,6 @@ class MainActivity : AppCompatActivity() {
         private const val KEY_STARTING_PLAYER = "startingPlayer"
         private const val KEY_MOVES = "moves"
         private const val KEY_IS_VS_AI = "isVsAi"
-        private const val KEY_IS_MINIMAX_AI = "isMinimaxAi"
         private const val KEY_NEXT_ROW_COUNT = "nextRowCount"
         private const val KEY_NEXT_COLUMN_COUNT = "nextColumnCount"
         private const val KEY_NEXT_WIN_LENGTH = "nextWinLength"

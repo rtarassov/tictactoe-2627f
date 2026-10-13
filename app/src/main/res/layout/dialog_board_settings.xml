@@ -57,36 +57,4 @@
         app:layout_constraintStart_toStartOf="@+id/textViewLabelWinLength"
         app:layout_constraintTop_toBottomOf="@+id/textViewLabelWinLength" />
 
-    <TextView
-        android:id="@+id/textViewLabelAiLevel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/board_margin"
-        android:text="@string/board_settings_ai_level"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/numberPickerRows" />
-
-    <RadioGroup
-        android:id="@+id/radioGroupAiLevel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewLabelAiLevel">
-
-        <RadioButton
-            android:id="@+id/radioButtonAiRandom"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/ai_level_random" />
-
-        <RadioButton
-            android:id="@+id/radioButtonAiMinimax"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/info_spacing"
-            android:text="@string/ai_level_minimax" />
-    </RadioGroup>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
