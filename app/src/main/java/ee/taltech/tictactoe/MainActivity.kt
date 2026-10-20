@@ -121,6 +121,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Lüliti vajutus. android:onClick käivitub ainult päris vajutusel, mitte siis, kui Android pööramise järel
+    // lüliti asendi ise taastab, seega AI käiku ei planeerita kogemata kaks korda.
+    fun switchVsAiClicked(view: View) {
+        // Pooleli mängu ei muuda: siis kehtib uus režiim alates järgmisest mängust (startNewGame loeb lüliti asendi).
+        if (game.moveCount > 0) return
+
+        // Tühjal laual rakendub režiim kohe. Ootel AI käik (kui AI oli kord ja lüliti pandi välja) tühistatakse.
+        isVsAi = switchVsAi.isChecked
+        aiMoveHandler.removeCallbacksAndMessages(null)
+        // Kui "O starts" on valitud ja AI lülitati sisse, on kohe AI kord ja AI teeb esimese käigu.
+        if (isAiTurn()) {
+            scheduleAiMove()
+        }
+    }
+
     fun buttonNewGameClicked(view: View) {
         if (game.status == GameStatus.IN_PROGRESS && game.moveCount > 0) {
             showNewGameDialog()

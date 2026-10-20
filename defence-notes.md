@@ -86,6 +86,9 @@ Põhiharus: laud 9-täheline string (`"X.O......"`), kelle käik, kas vs AI, tai
 **Miks võitjat ja võidulahtreid ei salvesta?**
 Taastamisel arvutatakse need laua seisust uuesti. Vähem asju, mis võiks lahku minna.
 
+**Millal "Play against AI" lüliti rakendub?**
+Tühjal laual (ühtegi käiku pole) kohe: `android:onClick="switchVsAiClicked"` paneb `isVsAi` ja kui "O starts" on valitud, planeerib AI esimese käigu. Pooleli mängus jääb režiim samaks ja uus kehtib järgmisest mängust (`startNewGame` loeb lüliti asendi). `onClick`, mitte `setOnCheckedChangeListener`, sest listener käivituks ka siis, kui Android pööramise järel lüliti asendi ise taastab, ja AI käik planeeritaks kaks korda.
+
 **Miks lüliti ja raadionupud ei ole Bundle'is?**
 Vaated, millel on `android:id`, salvestavad oma seisu ise. Android teeb seda automaatselt.
 

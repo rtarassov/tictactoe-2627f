@@ -247,4 +247,24 @@ class GameScreenTest {
             assertEquals(180f, activity.findViewById<android.view.View>(R.id.gridLayoutBoard).rotation)
         }
     }
+    @Test
+    fun vsAiToggle_onUntouchedBoard_appliesWithoutNewGame() {
+        onView(withId(R.id.switchVsAi)).perform(click())
+
+        cell(1, 1).perform(click())
+        Thread.sleep(MainActivity.AI_MOVE_DELAY_MS + 300)
+
+        onView(withId(R.id.textViewStatus)).check(matches(withText(text(R.string.status_turn, "X"))))
+        cell(1, 1).check(matches(withText("X")))
+    }
+
+    @Test
+    fun vsAiToggle_midGame_waitsForNextGame() {
+        cell(0, 0).perform(click())
+
+        onView(withId(R.id.switchVsAi)).perform(click())
+        Thread.sleep(MainActivity.AI_MOVE_DELAY_MS + 300)
+
+        onView(withId(R.id.textViewStatus)).check(matches(withText(text(R.string.status_turn, "O"))))
+    }
 }

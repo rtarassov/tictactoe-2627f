@@ -14,6 +14,7 @@
             android:id="@+id/switchVsAi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="switchVsAiClicked"
             android:text="@string/mode_vs_ai"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
