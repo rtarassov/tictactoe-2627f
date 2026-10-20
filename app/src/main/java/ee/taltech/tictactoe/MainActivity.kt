@@ -24,6 +24,8 @@ import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
 
+    // lateinit = väärtus antakse hiljem (onCreate'is findViewById-ga). Muutuja EI OLE null: tüüp on SwitchCompat, mitte SwitchCompat?.
+    // Kui seda kasutada enne väärtuse andmist, tuleb UninitializedPropertyAccessException (mitte NullPointerException).
     private lateinit var switchVsAi: SwitchCompat
     private lateinit var radioGroupStarter: RadioGroup
     private lateinit var textViewStatus: TextView
@@ -44,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     private var isNewGameDialogShowing = false
     private var newGameDialog: AlertDialog? = null
     private var boardSettingsDialog: AlertDialog? = null
+    // Handler, mis jooksutab koodi hiljem samal UI (main) lõimel. Vajalik AI käigu 400 ms viivituse jaoks.
     private val aiMoveHandler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +67,7 @@ class MainActivity : AppCompatActivity() {
         gridLayoutBoard = findViewById(R.id.gridLayoutBoard)
         statisticsStorage = StatisticsStorage(this)
 
+        // savedInstanceState on null, kui äpp käivitati esimest korda. Pööramise järel on seal onSaveInstanceState'is salvestatud seis.
         if (savedInstanceState != null) {
             restoreGame(savedInstanceState)
         } else {
@@ -71,12 +75,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Kutsutakse enne, kui Activity hävitatakse (nt pööramisel). Bundle'isse panna ainult väikesed andmed.
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(KEY_ROW_COUNT, game.rowCount)
         outState.putInt(KEY_COLUMN_COUNT, game.columnCount)
         outState.putInt(KEY_WIN_LENGTH, game.winLength)
         outState.putString(KEY_STARTING_PLAYER, game.startingPlayer.name)
+        // Laua asemel salvestame käikude ajaloo (lahtrite indeksid). Taastamisel mängitakse käigud uuesti läbi,
+        // nii arvutatakse võitja ise uuesti ja undo ajalugu jääb alles.
         outState.putIntArray(KEY_MOVES, game.moveHistory.map { cell -> cellIndexOf(cell) }.toIntArray())
         outState.putBoolean(KEY_IS_VS_AI, isVsAi)
         outState.putInt(KEY_NEXT_ROW_COUNT, nextRowCount)
@@ -90,18 +97,24 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        // Dialoogid peavad koos Activity'ga sulgema, muidu tuleb "window leaked" viga.
         newGameDialog?.dismiss()
         boardSettingsDialog?.dismiss()
+        // Tühistab ootel AI käigu, et see ei jookseks juba hävitatud Activity peal. Uus Activity planeerib selle restoreGame'is uuesti.
         aiMoveHandler.removeCallbacksAndMessages(null)
     }
 
+    // XML-i android:onClick kutsub selle välja. Nõuded: avalik meetod selles Activity's, täpselt üks View parameeter,
+    // nimi täht-tähelt sama mis XML-is. Vea korral crash alles nupuvajutusel, mitte kompileerimisel.
     fun buttonCellClicked(view: View) {
+        // Kui AI "mõtleb" (400 ms ootel), ignoreerime puudutusi, muidu saaks inimene teha AI eest käigu.
         if (isAiTurn()) return
 
         val cell = cellOf(cellButtons.indexOf(view))
         val moveWasMade = game.makeMove(cell.row, cell.column)
         if (!moveWasMade) return
 
+        // onMoveMade kutsutakse ALATI pärast õnnestunud käiku, ka siis kui mäng just lõppes: seal salvestatakse statistika.
         onMoveMade()
         if (isAiTurn()) {
             scheduleAiMove()
@@ -117,10 +130,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun buttonUndoClicked(view: View) {
+        // Lõppenud mängus undo ei tööta: tulemus on juba statistikas ja muidu saaks sama mängu kaks korda kirja panna.
         if (game.status != GameStatus.IN_PROGRESS || game.moveCount == 0) return
 
         aiMoveHandler.removeCallbacksAndMessages(null)
         game.undoMove()
+        // AI vastu: kui pärast tagasivõtmist on AI kord, võtame tagasi ka inimese käigu. Muidu teeks AI 400 ms pärast
+        // lihtsalt uue käigu ja undo näiks nagu ei teeks midagi. Inimene tahab tagasi võtta OMA käigu.
         if (isVsAi && game.currentPlayer == Player.O) {
             game.undoMove()
         }
@@ -134,6 +150,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun buttonRotateBoardClicked(view: View) {
+        // Pöörame ainult laua vaadet, mitte Activity't, seega Activity't ei looda uuesti.
+        // rotation(siht) animeerib täpse sihtnurgani; rotationBy(90f) lisaks 90 poolelioleva animatsiooni nurgale.
+        // Puudutused lähevad ikka õigesse lahtrisse, sest Android arvestab vaate pöörde ise ümber.
         boardRotationDegrees += QUARTER_TURN_DEGREES
         gridLayoutBoard.animate().rotation(boardRotationDegrees)
     }
@@ -143,6 +162,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun buttonStatisticsClicked(view: View) {
+        // Explicit intent: ütleme täpselt, millist klassi avada. StatsActivity läheb back stackis MainActivity peale.
         startActivity(Intent(this, StatsActivity::class.java))
     }
 
@@ -164,6 +184,8 @@ class MainActivity : AppCompatActivity() {
     private fun isAiTurn(): Boolean =
         isVsAi && game.status == GameStatus.IN_PROGRESS && game.currentPlayer == Player.O
 
+    // postDelayed = "jooksuta see 400 ms pärast samal UI lõimel". Vahepeal on lõim vaba ja ekraanile joonistatakse X.
+    // Thread.sleep(400) blokeeriks UI lõime: X ja O ilmuksid koos ja äpp oleks külmunud (~5 s pärast ANR).
     private fun scheduleAiMove() {
         aiMoveHandler.postDelayed({ makeAiMove() }, AI_MOVE_DELAY_MS)
     }
@@ -177,6 +199,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onMoveMade() {
+        // elapsedRealtime = millisekundid alates telefoni käivitamisest, MITTE kellaaeg. Ei hüppa, kui kasutaja muudab
+        // kellaaega või ajavööndit, seega sobib kestuse mõõtmiseks. Chronometer ootab ka just seda kella.
         if (gameStartElapsedRealtime == 0L) {
             gameStartElapsedRealtime = SystemClock.elapsedRealtime()
         }
@@ -202,15 +226,18 @@ class MainActivity : AppCompatActivity() {
         val startingPlayer = Player.valueOf(savedInstanceState.getString(KEY_STARTING_PLAYER, Player.X.name))
         val moveIndexes = savedInstanceState.getIntArray(KEY_MOVES) ?: IntArray(0)
         val moves = moveIndexes.map { index -> Cell(index / columnCount, index % columnCount) }
+        // Mängib salvestatud käigud uuesti läbi: laud, kelle käik, võitja ja võidulahtrid tulevad ise õigesti tagasi.
         game = TicTacToeGame.fromMoves(rowCount, columnCount, winLength, startingPlayer, moves)
 
         buildBoard()
         gridLayoutBoard.rotation = boardRotationDegrees
         renderGame()
 
+        // Kui pöörati ajal, mil AI "mõtles", planeerime AI käigu uuesti (vana tühistati onDestroy's).
         if (isAiTurn()) {
             scheduleAiMove()
         }
+        // Kui dialoog oli enne pööramist lahti (väärtus true), näitame seda uuesti.
         if (savedInstanceState.getBoolean(KEY_DIALOG_SHOWING)) {
             showNewGameDialog()
         }
@@ -229,21 +256,37 @@ class MainActivity : AppCompatActivity() {
         val gap = resources.getDimensionPixelSize(R.dimen.board_gap)
         val largestSide = maxOf(game.rowCount, game.columnCount)
         val textSizePx = resources.getDimension(R.dimen.cell_text_size) * TicTacToeGame.DEFAULT_BOARD_SIZE / largestSide
+        // Kaks tsüklit: välimine käib read läbi, sisemine veerud. Nii tehakse lahtrid rea kaupa vasakult paremale.
         for (row in 0 until game.rowCount) {
             for (column in 0 until game.columnCount) {
+                // Teeb cell_button.xml mallist uue nupu-objekti. "false" = ära lisa veel lauale, lisame allpool ise.
                 val cellButton = layoutInflater.inflate(R.layout.cell_button, gridLayoutBoard, false) as Button
+                // Silt "cell_rida_veerg", mille järgi Espresso testid õige lahtri üles leiavad.
                 cellButton.tag = cellTag(row, column)
+                // Mida suurem laud, seda väiksem X/O tekst, et sümbol lahtrisse ära mahuks.
                 cellButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePx)
+                // Ütleb GridLayoutile, millisesse ritta ja veergu nupp läheb. Kaal 1f = kõik read ja veerud saavad võrdse osa ruumist.
                 val cellLayoutParams = GridLayout.LayoutParams(
                     GridLayout.spec(row, 1f),
                     GridLayout.spec(column, 1f)
                 )
+                // 0 + kaal tähendab: "ära kasuta oma suurust, võta oma võrdne osa ruumist" (nagu 0dp + layout_weight).
                 cellLayoutParams.width = 0
                 cellLayoutParams.height = 0
+                // Vahe ainult lahtri üla- ja vasakusse serva, mitte esimeses reas/veerus. Vahedest paistab läbi
+                // GridLayouti taustavärv ja need ongi laua jooned. Välisservas vahet pole, seega raami ei teki.
                 cellLayoutParams.topMargin = if (row == 0) 0 else gap
                 cellLayoutParams.leftMargin = if (column == 0) 0 else gap
+                // Paneb nupu lauale nende asukoha- ja suurusereeglitega.
                 gridLayoutBoard.addView(cellButton, cellLayoutParams)
+                // Jätame nupu listi meelde. Listi järjekord = lahtrite järjekord, mille järgi
+                // cellOf(indeks) arvutab hiljem rea (indeks / veerud) ja veeru (indeks % veerud).
                 cellButtons.add(cellButton)
+                // Näide 3 veeruga laual (number = indeks listis):
+                //   rida 0:  0  1  2
+                //   rida 1:  3  4  5
+                //   rida 2:  6  7  8
+                // Indeks 7: rida = 7 / 3 = 2 (mitu täisrida on enne), veerg = 7 % 3 = 1 (palju üle jääb).
             }
         }
     }
@@ -255,6 +298,7 @@ class MainActivity : AppCompatActivity() {
             .setMessage(R.string.new_game_dialog_message)
             .setPositiveButton(R.string.new_game_dialog_confirm) { _, _ -> startNewGame() }
             .setNegativeButton(R.string.new_game_dialog_cancel, null)
+            // Käib iga sulgemise peale (New game, Cancel või väljaspool dialoogi vajutus), et lipp ei jääks valeks.
             .setOnDismissListener { isNewGameDialogShowing = false }
             .show()
     }

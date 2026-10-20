@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 
 class StatisticsStorage(private val context: Context) {
 
+    // SharedPreferences = lihtne võti-väärtus fail (mitte andmebaas). MODE_PRIVATE: seda faili saab lugeda ainult see äpp.
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(
         context.getString(R.string.preference_file_statistics),
         Context.MODE_PRIVATE
@@ -39,6 +40,7 @@ class StatisticsStorage(private val context: Context) {
             putInt(key(R.string.stat_key_human_wins_vs_ai), updated.humanWinsVsAi)
             putInt(key(R.string.stat_key_ai_wins_vs_human), updated.aiWinsVsHuman)
             putLong(key(R.string.stat_key_total_duration_ms), updated.totalDurationMs)
+            // apply() salvestab taustal ega blokeeri UI lõime (commit() ootaks ketta järel).
             apply()
         }
     }

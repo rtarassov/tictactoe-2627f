@@ -11,9 +11,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Tictactoe2627f">
+        <!-- Iga Activity peab manifestis olema, muidu crash: ActivityNotFoundException.
+             exported="false": teised äpid ei saa seda ekraani avada, ainult see äpp ise. -->
         <activity
             android:name=".StatsActivity"
             android:exported="false" />
+        <!-- exported="true", sest launcher (teine äpp) peab selle MAIN/LAUNCHER intent-filtri kaudu avama. -->
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -39,12 +39,15 @@ class StatsActivity : AppCompatActivity() {
         textViewAverageDuration = findViewById(R.id.textViewAverageDuration)
     }
 
+    // onResume käib iga kord, kui ekraan nähtavale tuleb. Andmed loetakse siin failist, Intentiga midagi kaasa ei saadeta.
     override fun onResume() {
         super.onResume()
         renderStatistics()
     }
 
     fun buttonBackToGameClicked(view: View) {
+        // Sama, mida teeb telefoni tagasi-nupp: sulgeb selle Activity ja back stackist tuleb MainActivity ette.
+        // MainActivity oli ainult peatatud, mitte hävitatud, seega mäng on alles.
         finish()
     }
 
