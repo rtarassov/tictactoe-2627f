@@ -2,11 +2,9 @@ package ee.taltech.tictactoe
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import kotlin.random.Random
 
 class TicTacToeGameTest {
 
@@ -146,22 +144,19 @@ class TicTacToeGameTest {
     }
 
     @Test
-    fun toBoardString_writesRowsLeftToRightTopToBottom() {
-        val game = TicTacToeGame()
-        game.makeMove(0, 0)
-        game.makeMove(1, 1)
-        game.makeMove(2, 2)
-
-        assertEquals("X...O...X", game.toBoardString())
-    }
-
-    @Test
     fun fromMoves_replaysHistoryAndRecomputesResult() {
         val moves = listOf(Cell(0, 0), Cell(1, 1), Cell(0, 1), Cell(1, 2), Cell(0, 2))
 
         val game = TicTacToeGame.fromMoves(3, 3, 3, Player.X, moves)
 
-        assertEquals("XXX.OO...", game.toBoardString())
+        assertEquals(
+            listOf(
+                listOf(Player.X, Player.X, Player.X),
+                listOf(null, Player.O, Player.O),
+                listOf(null, null, null),
+            ),
+            game.board,
+        )
         assertEquals(moves, game.moveHistory)
         assertEquals(5, game.moveCount)
         assertEquals(GameStatus.WON, game.status)
@@ -280,47 +275,5 @@ class TicTacToeGameTest {
     @Test(expected = IllegalArgumentException::class)
     fun customBoard_rejectsTooSmallBoard() {
         TicTacToeGame(rowCount = 2, columnCount = 3, winLength = 3)
-    }
-
-    @Test
-    fun makeRandomMove_choosesOnlyEmptyCells() {
-        val game = TicTacToeGame(random = Random(42))
-        game.makeMove(0, 0)
-        game.makeMove(0, 1)
-        game.makeMove(0, 2)
-        val emptyCellsBefore = game.emptyCells()
-
-        val chosenCell = game.makeRandomMove()
-
-        assertNotNull(chosenCell)
-        assertTrue(chosenCell in emptyCellsBefore)
-        assertEquals(Player.O, game.board[chosenCell!!.row][chosenCell.column])
-        assertEquals(4, game.moveCount)
-        assertEquals(Player.X, game.currentPlayer)
-    }
-
-    @Test
-    fun makeRandomMove_whenGameOver_returnsNull() {
-        val game = TicTacToeGame(random = Random(7))
-        game.makeMove(0, 0)
-        game.makeMove(1, 0)
-        game.makeMove(0, 1)
-        game.makeMove(1, 1)
-        game.makeMove(0, 2)
-
-        assertNull(game.makeRandomMove())
-        assertEquals(5, game.moveCount)
-    }
-
-    @Test
-    fun makeRandomMove_repeated_alwaysFinishesTheGame() {
-        val game = TicTacToeGame(random = Random(3))
-
-        while (game.status == GameStatus.IN_PROGRESS) {
-            assertNotNull(game.makeRandomMove())
-        }
-
-        assertTrue(game.status == GameStatus.WON || game.status == GameStatus.DRAW)
-        assertTrue(game.moveCount <= 9)
     }
 }

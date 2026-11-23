@@ -32,11 +32,11 @@ class MinimaxAiTest {
     @Test
     fun chooseMove_doesNotChangeTheGame() {
         val game = TicTacToeGame.fromMoves(3, 3, 3, Player.X, listOf(Cell(0, 0)))
-        val boardBefore = game.toBoardString()
+        val boardBefore = game.board
 
         MinimaxAi.forBoard(game, Random(1)).chooseMove(game)
 
-        assertEquals(boardBefore, game.toBoardString())
+        assertEquals(boardBefore, game.board)
         assertEquals(1, game.moveCount)
         assertEquals(Player.O, game.currentPlayer)
     }
@@ -52,17 +52,17 @@ class MinimaxAiTest {
     fun minimaxPlayer_neverLosesAgainstRandomOn3x3() {
         val random = Random(2026)
         repeat(40) { gameNumber ->
-            val game = TicTacToeGame(startingPlayer = if (gameNumber % 2 == 0) Player.X else Player.O, random = random)
+            val game = TicTacToeGame(startingPlayer = if (gameNumber % 2 == 0) Player.X else Player.O)
             val ai = MinimaxAi.forBoard(game, random)
             while (game.status == GameStatus.IN_PROGRESS) {
                 if (game.currentPlayer == Player.O) {
                     val cell = ai.chooseMove(game)!!
                     game.makeMove(cell.row, cell.column)
                 } else {
-                    game.makeRandomMove()
+                    playRandomMove(game, random)
                 }
             }
-            assertNotEquals("game $gameNumber: ${game.toBoardString()}", Player.X, game.winner)
+            assertNotEquals("game $gameNumber: ${game.board}", Player.X, game.winner)
         }
     }
 
@@ -110,17 +110,17 @@ class MinimaxAiTest {
         val random = Random(11)
         var aiWins = 0
         repeat(10) {
-            val game = TicTacToeGame(7, 7, 4, startingPlayer = Player.X, random = random)
+            val game = TicTacToeGame(7, 7, 4, startingPlayer = Player.X)
             val ai = MinimaxAi.forBoard(game, random)
             while (game.status == GameStatus.IN_PROGRESS) {
                 if (game.currentPlayer == Player.O) {
                     val cell = ai.chooseMove(game)!!
                     game.makeMove(cell.row, cell.column)
                 } else {
-                    game.makeRandomMove()
+                    playRandomMove(game, random)
                 }
             }
-            assertNotEquals(game.toBoardString(), Player.X, game.winner)
+            assertNotEquals(game.board.toString(), Player.X, game.winner)
             if (game.winner == Player.O) aiWins++
         }
         assertTrue("AI won only $aiWins of 10", aiWins >= 8)

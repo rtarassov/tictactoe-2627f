@@ -130,7 +130,7 @@ Väljast saab lugeda (`game.status`), aga muuta saab ainult klass ise. Activity 
 Klassi-tasemel asjad, mida ei pea objekti kaudu kutsuma: konstandid (`BOARD_SIZE`), abifunktsioonid (`fromMoves`). `const val` on kompileerimisaegne konstant.
 
 **Kuidas juhuslik AI töötab?**
-`emptyCells().random(random)` — tühjade lahtrite list ja sellest juhuslik. `Random` antakse konstruktoris ette, et testides saaks seemnega (`Random(42)`) sama tulemuse korrata. **Boonusharus** mängib AI alati minimaxiga; `makeRandomMove()` jäi mootorisse ainult testide jaoks (minimaxi vastane testides).
+`emptyCells().random(random)` — tühjade lahtrite list ja sellest juhuslik. `Random` antakse konstruktoris ette, et testides saaks seemnega (`Random(42)`) sama tulemuse korrata. **Boonusharus** mängib AI alati minimaxiga ja `makeRandomMove()` on mootorist eemaldatud (rakendus seda ei kasutanud). Testides teeb juhusliku vastase käigu abifunktsioon `playRandomMove` (`src/test/.../TestMoves.kt`).
 
 ### AI viivitus
 
